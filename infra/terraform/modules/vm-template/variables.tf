@@ -35,5 +35,5 @@ variable "ci_password" {
 variable "ssh_keys" {
   type        = list(string)
   description = "List of SSH public keys to add to authorized_keys"
-  default     = []
+  default     = ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILVH5G15RJeidUE0Q54Tib+BFSzyFLdKkJF7t9yFAvFl phanthawasjira@gmail.com"]
 }
