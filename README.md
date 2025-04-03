@@ -1,2 +1,2 @@
 # ClusterFuck
-A enterprise-grade homelab
+Enterprise-grade DevOps platform running on Proxmox
