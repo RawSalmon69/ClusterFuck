@@ -14,7 +14,7 @@ module "vm_template" {
   source = "../../modules/vm-template"
 
   template_name       = var.template_name
-  proxmox_node        = var.proxmox_node
+  proxmox_node        = "proxmox"
   proxmox_host        = var.proxmox_host
   base_template       = var.base_template
   storage_pool        = var.storage_pool

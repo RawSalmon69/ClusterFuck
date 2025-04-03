@@ -1,4 +1,5 @@
 resource "proxmox_vm_qemu" "template" {
+  vmid        = 100
   name        = var.template_name
   desc        = "Ubuntu 22.04 LTS template for Terraform deployments"
   target_node = var.proxmox_node
@@ -24,6 +25,8 @@ resource "proxmox_vm_qemu" "template" {
     model     = "virtio"
     bridge    = "vmbr0"
   }
+
+  agent = 1
 }
 
 # Convert the VM to a template after creation
