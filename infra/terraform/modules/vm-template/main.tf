@@ -4,13 +4,14 @@ resource "proxmox_vm_qemu" "template" {
   target_node = var.proxmox_node
 
   # Clone from your existing template
-  clone       = "9000"  # or var.base_template if you've defined that variable
-  full_clone  = true    # Use full clone for production VMs
+  clone       = "ubuntu-2204-template"  # or var.base_template
+  full_clone  = true
 
-  # Set to template
-  provisioner "local-exec" {
-    command = "sleep 15 && ssh root@${var.proxmox_host} 'qm set ${self.vmid} --boot c --bootdisk scsi0 && qm template ${self.vmid}'"
-  }
+  # Template settings
+  cores       = 2
+  sockets     = 1
+  memory      = 2048
+  onboot      = false  # Templates shouldn't auto-start
 
   # Cloud-init settings
   ciuser      = "ubuntu"
@@ -18,22 +19,18 @@ resource "proxmox_vm_qemu" "template" {
   ipconfig0   = "ip=dhcp"
   sshkeys     = join("\n", var.ssh_keys)
 
-  # Disks
-  disk {
-    type      = "scsi"
-    storage   = var.storage_pool
-    size      = "20G"
-    backup    = true
-  }
-
   # Network interfaces
   network {
     model     = "virtio"
-    bridge    = "vmbr0"  # Management network
+    bridge    = "vmbr0"
   }
+}
 
-  # Ensure cloud-init is properly regenerated
+# Convert the VM to a template after creation
+resource "null_resource" "convert_to_template" {
+  depends_on = [proxmox_vm_qemu.template]
+
   provisioner "local-exec" {
-    command = "sleep 15 && ssh root@${var.proxmox_host} qm set ${self.vmid} --boot c --bootdisk scsi0"
+    command = "sleep 30 && ssh root@${var.proxmox_host} 'qm template ${proxmox_vm_qemu.template.vmid}'"
   }
 }
