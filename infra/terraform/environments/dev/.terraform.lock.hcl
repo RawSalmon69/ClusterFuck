@@ -1,10 +1,6 @@
 # This file is maintained automatically by "terraform init".
 # Manual edits may be lost in future updates.
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> origin/develop
 provider "registry.terraform.io/hashicorp/null" {
   version = "3.2.3"
   hashes = [
@@ -24,17 +20,9 @@ provider "registry.terraform.io/hashicorp/null" {
   ]
 }
 
-<<<<<<< HEAD
-=======
->>>>>>> main
-provider "registry.terraform.io/telmate/proxmox" {
-  version     = "2.9.14"
-  constraints = "2.9.14"
-=======
 provider "registry.terraform.io/thegameprofi/proxmox" {
   version     = "2.9.15"
   constraints = "2.9.15"
->>>>>>> origin/develop
   hashes = [
     "h1:mmIwotcDQFWfdtZpbOozXrouLy2ZDy3c30YBEktXpx4=",
     "zh:1ffee851e14bd23547dcd0b72d19f703eb8b4f76dcce7a2c65d2eaaab0dbd104",

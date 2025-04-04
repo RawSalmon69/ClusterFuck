@@ -1,7 +1,7 @@
 resource "proxmox_vm_qemu" "template" {
   vmid        = 100
   name        = var.template_name
-  desc        = "Ubuntu 22.04 LTS template for Terraform deployments"
+  desc        = "Ubuntu 24.04.2 LTS template for Terraform deployments"
   target_node = var.proxmox_node
 
   // Clone from the existing VM with ID 9000
@@ -15,6 +15,7 @@ resource "proxmox_vm_qemu" "template" {
 
   // Ensure it doesn't auto-start (it's meant to be a template)
   onboot      = false
+  vm_state    = "stopped"
 
   // Cloud-init settings
   ciuser      = "ubuntu"
@@ -30,17 +31,21 @@ resource "proxmox_vm_qemu" "template" {
 
   // Enable qemu-guest-agent
   agent       = 1
-
   // Prevent the VM from actually starting when created
-  oncreate    = false
+}
+resource "null_resource" "fix_boot_disk" {
+  depends_on = [proxmox_vm_qemu.template]
+
+  provisioner "local-exec" {
+    command = "ssh -i ~/.ssh/id_ed25519 root@${var.proxmox_host} 'qm set ${proxmox_vm_qemu.template.vmid} --boot c --bootdisk scsi0'"
+  }
 }
 
 // Convert VM to template after creation
 resource "null_resource" "convert_to_template" {
   depends_on = [proxmox_vm_qemu.template]
 
-  // Give the VM creation time to complete before converting
   provisioner "local-exec" {
-    command = "sleep 30 && ssh root@${var.proxmox_host} 'qm template ${proxmox_vm_qemu.template.vmid}'"
+    command = "ssh -i ~/.ssh/id_ed25519 root@${var.proxmox_host} 'qm template ${proxmox_vm_qemu.template.vmid}'"
   }
 }

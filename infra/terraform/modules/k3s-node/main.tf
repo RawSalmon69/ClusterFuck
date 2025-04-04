@@ -32,6 +32,8 @@ resource "proxmox_vm_qemu" "k3s_master" {
   ipconfig0   = "ip=${local.network_config.master.ip_address}/24,gw=${var.k3s_network_gateway}"
   ciuser      = "ubuntu"
   sshkeys     = join("\n", var.ssh_keys)
+  # boot        = "c"
+  # bootdisk    = "scsi0"
 
   # Network configuration
   network {
@@ -40,12 +42,16 @@ resource "proxmox_vm_qemu" "k3s_master" {
   }
 
   # Storage configuration for application data
-  disk {
-    type      = "scsi"
-    storage   = var.storage_pool
-    size      = var.master_disk_size
-    backup    = true
-  }
+  # disk {
+  #   type      = "scsi"
+  #   storage   = var.storage_pool
+  #   size      = var.master_disk_size
+  #   backup    = true
+  # }
+
+  provisioner "local-exec" {
+      command = "ssh root@${var.proxmox_host} 'qm set ${self.vmid} --boot c --bootdisk scsi0'"
+    }
 
   # Delay to ensure cloud-init completes before proceeding
   provisioner "remote-exec" {
@@ -108,6 +114,8 @@ resource "proxmox_vm_qemu" "k3s_worker" {
   ipconfig0   = "ip=${var.k3s_network_cidr}.${local.network_config.worker.ip_address_start + count.index}/24,gw=${var.k3s_network_gateway}"
   ciuser      = "ubuntu"
   sshkeys     = join("\n", var.ssh_keys)
+  # boot        = "c"
+  # bootdisk    = "scsi0"
 
   # Network configuration
   network {
@@ -121,16 +129,22 @@ resource "proxmox_vm_qemu" "k3s_worker" {
     bridge    = "vmbr2"  # Application network
   }
 
-  # Storage configuration
-  disk {
-    type      = "scsi"
-    storage   = var.storage_pool
-    size      = var.worker_disk_size
-    backup    = true
-  }
+  # # Storage configuration
+  # disk {
+  #     type      = "scsi"
+  #     storage   = var.storage_pool
+  #     size      = var.worker_disk_size
+  #     backup    = true
+  #   }
+
+    provisioner "local-exec" {
+        command = "ssh root@${var.proxmox_host} 'qm set ${self.vmid} --boot c --bootdisk scsi0'"
+      }
 
   # Delays to wait for master node to be ready
   depends_on = [proxmox_vm_qemu.k3s_master]
+
+
 
   # Delay to ensure cloud-init completes before proceeding
   provisioner "remote-exec" {

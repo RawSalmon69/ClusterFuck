@@ -1,0 +1,42 @@
+# Create master node
+resource "proxmox_vm_qemu" "k3s_master" {
+  count       = 1
+  name        = "test-master-${count.index + 1}"
+  desc        = "K3s master node for test"
+  target_node = var.proxmox_node
+  clone       = var.template_name
+
+  # Hardware configuration
+  cores       = 2
+  sockets     = 1
+  memory      = 1024
+  agent       = 1
+
+  # Explicit boot settings
+  boot        = "c"
+  bootdisk    = "scsi0"
+
+  # Boot configuration
+  onboot      = true
+
+  # Cloud-init settings
+  ipconfig0   = "ip=192.168.1.200/24,gw=192.168.1.1"
+  ciuser      = "ubuntu"
+  sshkeys     = join("\n", var.ssh_keys)
+
+  # Network configuration
+  network {
+    model     = "virtio"
+    bridge    = "vmbr0"
+  }
+
+  # Storage configuration for application data
+  disk {
+    type      = "scsi"
+    storage   = var.storage_pool
+    size      = "20G"
+    backup    = true
+  }
+
+  # Comment out all provisioners for now - we'll test basic boot functionality first
+}

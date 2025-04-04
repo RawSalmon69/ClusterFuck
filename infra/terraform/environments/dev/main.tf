@@ -27,8 +27,10 @@ module "k3s_cluster" {
   source = "../../modules/k3s-node"
 
   cluster_name        = "dev"
+  proxmox_host        = var.proxmox_host
   proxmox_node        = var.proxmox_node
-  template_name       = module.vm_template.template_name
+  # template_name       = module.vm_template.template_name
+  template_name       = var.template_name
   storage_pool        = var.storage_pool
 
   # Dev environment only needs minimal cluster
@@ -37,11 +39,11 @@ module "k3s_cluster" {
 
   # Reduced specs for dev environment
   master_cores        = 2
-  master_memory       = 4096
+  master_memory       = 2048
   master_disk_size    = "30G"
 
   worker_cores        = 2
-  worker_memory       = 4096
+  worker_memory       = 2048
   worker_disk_size    = "40G"
 
   # Network configuration
@@ -61,15 +63,17 @@ module "storage" {
   source = "../../modules/storage-node"
 
   prefix                  = "dev"
+  proxmox_host        = var.proxmox_host
   proxmox_node            = var.proxmox_node
-  template_name           = module.vm_template.template_name
+  # template_name           = module.vm_template.template_name
+  template_name           = var.template_name
 
   # Only one storage node for dev
   node_count              = 1
 
   # Reduced specs for dev environment
   cores                   = 1
-  memory                  = 2048
+  memory                  = 1024
   system_disk_size        = "20G"
 
   # Just one data disk for dev
