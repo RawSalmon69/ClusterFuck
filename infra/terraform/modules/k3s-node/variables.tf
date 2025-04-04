@@ -10,6 +10,11 @@ variable "proxmox_node" {
   default     = "pve"
 }
 
+variable "proxmox_host" {
+  type        = string
+  description = "The hostname or IP of the Proxmox host for SSH commands"
+}
+
 variable "template_name" {
   type        = string
   description = "Name of the VM template to clone"
@@ -48,7 +53,7 @@ variable "master_cores" {
 variable "master_memory" {
   type        = number
   description = "Amount of memory for master nodes (in MB)"
-  default     = 4096
+  default     = 2048
 }
 
 variable "master_disk_size" {
@@ -66,7 +71,7 @@ variable "worker_cores" {
 variable "worker_memory" {
   type        = number
   description = "Amount of memory for worker nodes (in MB)"
-  default     = 4096
+  default     = 2048
 }
 
 variable "worker_disk_size" {

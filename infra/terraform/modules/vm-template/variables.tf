@@ -1,7 +1,7 @@
 variable "template_name" {
   type        = string
   description = "Name of the VM template"
-  default     = "ubuntu-2204-template"
+  default     = "ubuntu-2404-template"
 }
 
 variable "proxmox_node" {

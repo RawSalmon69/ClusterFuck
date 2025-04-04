@@ -4,6 +4,11 @@ variable "prefix" {
   default     = "homelab"
 }
 
+variable "proxmox_host" {
+  type        = string
+  description = "The hostname or IP of the Proxmox host for SSH commands"
+}
+
 variable "proxmox_node" {
   type        = string
   description = "The name of the Proxmox node"
@@ -30,7 +35,7 @@ variable "cores" {
 variable "memory" {
   type        = number
   description = "Amount of memory for storage nodes (in MB)"
-  default     = 4096
+  default     = 1024
 }
 
 variable "system_disk_storage_pool" {
