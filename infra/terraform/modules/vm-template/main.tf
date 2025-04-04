@@ -5,7 +5,7 @@ resource "proxmox_vm_qemu" "template" {
   target_node = var.proxmox_node
 
   // Clone from the existing VM with ID 9000
-  clone       = "ubuntu-2204-template"  // Directly reference the VM ID
+  clone       = "ubuntu-2404-template"  // Directly reference the VM ID
   full_clone  = true
 
   // Basic VM configuration

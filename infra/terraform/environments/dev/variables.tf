@@ -32,13 +32,13 @@ variable "proxmox_host" {
 variable "template_name" {
   type        = string
   description = "Name of the VM template"
-  default     = "ubuntu-2204-template"
+  default     = "ubuntu-2404-template"
 }
 
 variable "base_template" {
   type        = string
   description = "Base image to clone from (VM ID or name)"
-  default     = "local:vztmpl/ubuntu-22.04-standard_22.04-1_amd64.tar.zst"
+  default     = "ubuntu-2404-template"
 }
 
 variable "storage_pool" {
