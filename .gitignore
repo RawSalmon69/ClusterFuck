@@ -40,3 +40,4 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.bak
+infra/terraform/environments/dev/.terraform.lock.hcl
